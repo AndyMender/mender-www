@@ -1,0 +1,1 @@
+This is a small Web development project for my personal website/blog
