@@ -1,0 +1,6 @@
+flask
+lxml
+isort
+pycodestyle
+pytest
+sqlalchemy
