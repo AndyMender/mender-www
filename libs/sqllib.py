@@ -13,6 +13,7 @@ def create_tables(engine: Engine) -> bool:
                      ' (id INTEGER PRIMARY KEY,'
                      '  title TEXT NOT NULL,'
                      '  content TEXT NOT NULL,'
+                     '  tags TEXT,'
                      '  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
                      '  UNIQUE (id, title) ON CONFLICT REPLACE'
                      '  )')
