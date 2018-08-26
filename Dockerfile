@@ -15,9 +15,6 @@ RUN apt-get install -y nodejs
 
 RUN npm install yarn -g
 
-# install bulma (CSS framework)
-RUN npm install bulma -g
-
 # check code style, import ordering and run pytest tests
 RUN ./codestyle_check.sh
 
