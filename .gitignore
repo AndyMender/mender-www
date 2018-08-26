@@ -107,3 +107,6 @@ venv.bak/
 
 # Jet Brains software
 .idea/
+
+# private content
+./*.db
