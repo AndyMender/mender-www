@@ -34,6 +34,7 @@ def get_posts(engine: Engine, id: int = None) -> list:
     Get all blog posts as a list of table records
 
     :param engine: SQLAlchemy engine object
+    :param id: blog entry 'id' (optional)
     :return:
     """
     with engine.connect() as conn:
@@ -43,8 +44,10 @@ def get_posts(engine: Engine, id: int = None) -> list:
         else:
             result = conn.execute('SELECT * FROM entries')
 
+        posts = [dict(row) for row in result]
+
         # no data retrieved
-        if len(result[0]) == 0:
+        if len(posts[0]) == 0:
             return []
 
-        return [dict(row) for row in result]
+        return posts

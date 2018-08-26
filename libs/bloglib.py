@@ -4,6 +4,7 @@ from typing import Optional
 
 import lxml.html
 from sqlalchemy.engine import Engine
+from sqlalchemy.sql import text
 
 from .sqllib import get_posts
 
@@ -27,12 +28,13 @@ class Entry:
         :param engine: SQLAlchemy engine object
         :return:
         """
+        sql_query = text('INSERT OR REPLACE INTO entries (id, title, content)'
+                         ' VALUES (:id, :title, :content)')
+
+        data = {'id': self.id, 'title': self.title, 'content': self.content}
+
         with engine.connect() as conn:
-            conn.execute('INSERT INTO entries (id, title, content)'
-                         ' VALUES (:id, :title:, :content)'
-                         ' ON CONFLICT REPLACE', {'id': self.id,
-                                                  'title': self.title,
-                                                  'content': self.content})
+            conn.execute(sql_query, **data)
 
         return True
 
