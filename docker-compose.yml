@@ -4,7 +4,6 @@ services:
   # application Flask server
   server:
     container_name: mender_www
-    env_file: .env
     restart: unless-stopped
 
     environment:
