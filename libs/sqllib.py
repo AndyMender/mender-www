@@ -48,4 +48,3 @@ def get_posts(engine: Engine, id: int = None) -> list:
             return []
 
         return [dict(row) for row in result]
-
