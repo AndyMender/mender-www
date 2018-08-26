@@ -1,29 +1,25 @@
-import os
-
 import pytest
-from dotenv import find_dotenv, load_dotenv
 from sqlalchemy import create_engine
 
 from libs.bloglib import Entry
-
-# load .env file
-load_dotenv(find_dotenv())
-
-# SQLite3 database
-SQLDB = os.environ.get('SQL_DB')
+from libs.sqllib import create_tables
 
 
 @pytest.fixture
-def sql_engine():
-    """Provide a temporary SQLAlchemy engine connection for tests"""
+def get_engine():
+    """Provide a temporary SQLAlchemy engine connection
+    to an in-memory database for tests"""
 
-    engine = create_engine(f'sqlite:///{SQLDB}')
+    engine = create_engine(f'sqlite://')
+
+    create_tables(engine)
 
     conn = engine.connect()
 
     yield conn
 
     conn.close()
+    engine.dispose()
 
 
 @pytest.fixture
