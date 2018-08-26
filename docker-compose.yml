@@ -6,15 +6,11 @@ services:
     container_name: mender_www
     restart: unless-stopped
 
-    environment:
-      FLASK_APP: "main.py"
-
     expose:
-      - "5000"
+      - "8000"
 
     build:
       context: .
-      dockerfile: Dockerfile
 
     logging:
       driver: "json-file"

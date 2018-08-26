@@ -8,4 +8,4 @@ RUN python -m pip install -r requirements.txt
 
 RUN ./codestyle_check.sh
 
-CMD ["flask", "run"]
+CMD ["python", "main.py"]
