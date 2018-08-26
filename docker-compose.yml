@@ -6,6 +6,9 @@ services:
     container_name: mender_www
     restart: unless-stopped
 
+    expose:
+      - "8000"
+
     ports:
       - "8000:8000"
 
