@@ -109,4 +109,4 @@ venv.bak/
 .idea/
 
 # private content
-./*.db
+*.db
