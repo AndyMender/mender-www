@@ -62,7 +62,7 @@ class EntryFactory:
         post = posts[0]
 
         return Entry(post['id'], post['title'],
-                     post['content'], post['tags'].split(','))
+                     post['content'], post['tags'])
 
     @staticmethod
     def from_html(html: str) -> Entry:

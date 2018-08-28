@@ -45,7 +45,12 @@ def get_posts(engine: Engine, id: int = None) -> list:
         else:
             result = conn.execute('SELECT * FROM entries')
 
+        # unpack results into list of JSON records
         posts = [dict(row) for row in result]
+
+        # unpack post 'tags'
+        for i in range(len(posts)):
+            posts[i]['tags'] = posts[i]['tags'].split(',')
 
         # no data retrieved
         if len(posts[0]) == 0:

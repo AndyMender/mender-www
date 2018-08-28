@@ -10,7 +10,7 @@ ENTRY_TAGS = ['test', 'testing']
 def test_create_entry(create_entry):
     """Create a blog Entry object and verify its attributes"""
 
-    entry = create_entry(ENTRY_ID, ENTRY_TITLE, ENTRY_TEXT)
+    entry = create_entry(ENTRY_ID, ENTRY_TITLE, ENTRY_TEXT, ENTRY_TAGS)
 
     assert entry.id == ENTRY_ID
     assert entry.title == ENTRY_TITLE
