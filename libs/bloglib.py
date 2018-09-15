@@ -55,14 +55,18 @@ class EntryFactory:
         """
         posts = get_posts(engine, id)
 
-        # entry for specified 'id' does not exist
-        if len(posts) == 0:
-            return None
+        entry = None
 
-        post = posts[0]
+        # populate entry if 'id' exists
+        if len(posts) > 0:
+            post = posts[0]
 
-        return Entry(post['id'], post['title'],
-                     post['content'], post['tags'])
+            entry = Entry(post['id'],
+                          post['title'],
+                          post['content'],
+                          post['tags'])
+
+        return entry
 
     @staticmethod
     def from_html(html: str) -> Entry:
@@ -78,19 +82,23 @@ class EntryFactory:
 
         # get entry 'title'
         title = ''
+
         for child in document.head.iterchildren():
             if child.tag == 'title':
                 title = child.text
                 break
 
         # get entry 'content'
-        content = ''.join(lxml.html.tostring(child, pretty_print=True).decode()
-                          for child in document.body.iterchildren())
+        content = []
+
+        for child in document.body.iterchildren():
+            content.append(lxml.html.tostring(child,
+                                              pretty_print=True).decode())
+
+        content = ''.join(content)
 
         # get entry 'tags'
-        tags = document.head.get('id')
-        if tags is None:
-            tags = ""
+        tags = document.head.get('id', '')
 
         return Entry(id, title, content, tags.split(','))
 
