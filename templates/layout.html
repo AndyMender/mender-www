@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="refresh" content="300"/>
+
+        <link rel="stylesheet" type="text/css" href="bulma.css" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" crossorigin="anonymous">
+
+        <title>{{ title if title else "Lands of Unix" }}</title>
+
+    </head>
+    <body>
+        <!-- HEADER SECTION -->
+        <section class="hero is-primary is-bold" style="opacity: .8; background-image: url(https://wallpapercave.com/wp/W3gW73i.jpg); background-position: center; background-size: cover;">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title is-1">Lands of Unix</h1>
+                    <h2 class="subtitle">A geek apprentice in quest of computing comprehension...</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN SECTION -->
+        <section class="section">
+            <div class="columns">
+                <div class="column is-two-thirds">
+                    <div class="box">
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+
+                <div class="column">
+                    <aside class="menu">
+                        <p class="menu-label">General</p>
+                            <ul class="menu-list">
+                                <li><a href="/">About Me</a></li>
+                            </ul>
+                        <p class="menu-label">Posts</p>
+                            <ul class="menu-list">
+                                <!-- TODO: populate with post titles, etc. -->
+                                <li><a>Dashboard</a></li>
+                                <li><a>Customers</a></li>
+                            </ul>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER SECTION -->
+        <footer class="footer">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item">
+                        <h1 class="title is-6">Copyright @ Andy Mender 2018</h1>
+                    </a>
+                </div>
+
+                <div class="navbar-menu is-active">
+                    <div class="navbar-end">
+                        <a class="navbar-item">
+                            <span class="icon">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                        <a class="navbar-item">
+                            <span class="icon">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </footer>
+    </body>
+</html>
