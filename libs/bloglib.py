@@ -11,8 +11,8 @@ from libs.sqllib import get_posts
 
 class Entry:
     """Blog entry object representation"""
-    def __init__(self, id: int, title: str, filename: str, tags: list = None):
-        self.id = id
+    def __init__(self, post_id: int, title: str, filename: str, tags: list = None):
+        self.post_id = post_id
         self.title = title
         self.filename = filename
         self.tags = tags if tags is not None else []
@@ -33,7 +33,7 @@ class Entry:
                          ' (id, title, filename, tags)'
                          ' VALUES (:id, :title, :filename, :tags)')
 
-        data = {'id': self.id,
+        data = {'id': self.post_id,
                 'title': self.title,
                 'filename': self.filename,
                 'tags': ','.join(self.tags)}
