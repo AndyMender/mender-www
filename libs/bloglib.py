@@ -1,8 +1,6 @@
 import logging
-import os.path
 from typing import Optional
 
-import lxml.html
 from sqlalchemy.engine import Engine
 from sqlalchemy.sql import text
 
