@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="refresh" content="300"/>
 
-        <link rel="stylesheet" type="text/css" href="bulma.css" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bulma.css') }}" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" crossorigin="anonymous">
 
         <title>{{ title or "Lands of Unix" }}</title>
@@ -39,9 +39,9 @@
                             </ul>
                         <p class="menu-label">Posts</p>
                             <ul class="menu-list">
-                                <!-- TODO: populate with post titles, etc. -->
-                                <li><a>Dashboard</a></li>
-                                <li><a>Customers</a></li>
+                                {% for post in posts %}
+                                    <li><a href="{{ url_for('posts', post_id=post['id']) }}">{{ post['title'] }}</a></li>
+                                {% endfor %}
                             </ul>
                     </aside>
                 </div>
