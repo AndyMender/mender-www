@@ -6,15 +6,15 @@ import lxml.html
 from sqlalchemy.engine import Engine
 from sqlalchemy.sql import text
 
-from .sqllib import get_posts
+from libs.sqllib import get_posts
 
 
 class Entry:
     """Blog entry object representation"""
-    def __init__(self, id: int, title: str, content: str, tags: list = None):
+    def __init__(self, id: int, title: str, filename: str, tags: list = None):
         self.id = id
         self.title = title
-        self.content = content
+        self.filename = filename
         self.tags = tags if tags is not None else []
         self.logger = self.get_logger()
 
@@ -30,12 +30,12 @@ class Entry:
         :return:
         """
         sql_query = text('INSERT OR REPLACE INTO entries'
-                         ' (id, title, content, tags)'
-                         ' VALUES (:id, :title, :content, :tags)')
+                         ' (id, title, filename, tags)'
+                         ' VALUES (:id, :title, :filename, :tags)')
 
         data = {'id': self.id,
                 'title': self.title,
-                'content': self.content,
+                'filename': self.filename,
                 'tags': ','.join(self.tags)}
 
         with engine.connect() as conn:
@@ -63,54 +63,7 @@ class EntryFactory:
 
             entry = Entry(post['id'],
                           post['title'],
-                          post['content'],
+                          post['filename'],
                           post['tags'])
 
         return entry
-
-    @staticmethod
-    def from_html(html: str) -> Entry:
-        """Generate an Entry object from a loaded HTML string
-
-        :param html: HTML file loaded into a string
-        :return:
-        """
-        document = lxml.html.document_fromstring(html)
-
-        # get entry 'id'
-        id = int(document.head.get('id'))
-
-        # get entry 'title'
-        title = ''
-
-        for child in document.head.iterchildren():
-            if child.tag == 'title':
-                title = child.text
-                break
-
-        # get entry 'content'
-        content = []
-
-        for child in document.body.iterchildren():
-            content.append(lxml.html.tostring(child,
-                                              pretty_print=True).decode())
-
-        content = ''.join(content)
-
-        # get entry 'tags'
-        tags = document.head.get('id', '')
-
-        return Entry(id, title, content, tags.split(','))
-
-    @staticmethod
-    def from_file(filename: str) -> Entry:
-        """Generate an Entry object from an HTML file
-
-        :param filename: HTML file name
-        """
-        ext = os.path.splitext(filename)[1]
-
-        if ext not in ('.html', '.HTML'):
-            raise ValueError(f'{filename} is not an HTML file.')
-
-        return EntryFactory.from_html(open(filename).read())

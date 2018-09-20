@@ -26,7 +26,7 @@ def get_engine():
 def create_entry():
     """Create a blog Entry object from provided params"""
 
-    def _create_entry(id: int, title: str, content: str, tags: list = None):
-        return Entry(id, title, content, tags)
+    def _create_entry(id: int, title: str, filename: str, tags: list = None):
+        return Entry(id, title, filename, tags)
 
     return _create_entry

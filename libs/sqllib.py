@@ -12,7 +12,7 @@ def create_tables(engine: Engine) -> bool:
         conn.execute('CREATE TABLE IF NOT EXISTS entries'
                      ' (id INTEGER PRIMARY KEY,'
                      '  title TEXT NOT NULL,'
-                     '  content TEXT NOT NULL,'
+                     '  filename TEXT NOT NULL,'
                      '  tags TEXT,'
                      '  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
                      '  UNIQUE (id, title) ON CONFLICT REPLACE'
@@ -30,18 +30,18 @@ def create_tables(engine: Engine) -> bool:
     return True
 
 
-def get_posts(engine: Engine, id: int = None) -> list:
+def get_posts(engine: Engine, post_id: int = None) -> list:
     """
     Get all blog posts as a list of table records
 
     :param engine: SQLAlchemy engine object
-    :param id: blog entry 'id' (optional)
+    :param post_id: blog entry 'id' (optional)
     :return:
     """
     with engine.connect() as conn:
-        if id is not None:
+        if post_id is not None:
             result = conn.execute('SELECT * FROM entries WHERE id = ?',
-                                  id)
+                                  post_id)
         else:
             result = conn.execute('SELECT * FROM entries')
 
