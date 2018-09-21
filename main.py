@@ -1,10 +1,9 @@
 import os
 
 from dotenv import find_dotenv, load_dotenv
-from flask import Flask, render_template, abort
+from flask import Flask, render_template
 from sqlalchemy import create_engine
 
-from libs.bloglib import Entry
 from libs.sqllib import create_tables, get_posts
 
 # load .env file
@@ -22,8 +21,8 @@ SQL_DB = os.environ.get('SQL_DB')
 def index():
     """Blog front page"""
 
-    # get posts from database
-    posts = get_posts(engine)
+    # get 'published' posts from database
+    posts = [post for post in get_posts(engine) if post['published']]
 
     # create website context
     context = {'posts': posts}
@@ -37,7 +36,7 @@ def posts(post_id):
     """Individual blog post endpoints"""
 
     # get post from database
-    posts = get_posts(engine)
+    posts = [post for post in get_posts(engine) if post['published']]
 
     context = {'posts': posts}
 
@@ -45,14 +44,12 @@ def posts(post_id):
     for post in posts:
         if int(post_id) == post['id']:
 
-            # create website context
-            context['title'] = post['title']
-            context['tags'] = post['tags']
-            context['publish_date'] = post['timestamp']
+            # include 'post' attributes in Web page 'context'
+            context.update(post)
 
             return render_template(post['filename'], **context)
 
-    return abort(404)
+    return render_template('not_found.html', **context)
 
 
 if __name__ == '__main__':
@@ -61,10 +58,6 @@ if __name__ == '__main__':
 
     # generate tables (if missing)
     create_tables(engine)
-
-    # create selected post and store in database
-    entry = Entry(post_id=1, title='Test Post', filename='001.html', tags=['test'])
-    entry.to_sql(engine)
 
     # start Web application
     app.run(os.environ.get('FLASK_HOST'),
