@@ -15,7 +15,7 @@ def create_tables(engine: Engine) -> bool:
                      '  filename TEXT NOT NULL,'
                      '  tags TEXT,'
                      '  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
-                     '  published BOOLEAN DEFAULT FALSE,'
+                     '  published INTEGER DEFAULT 0,'
                      '  UNIQUE (id, title) ON CONFLICT REPLACE'
                      '  )')
 
