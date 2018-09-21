@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="title">Post not Found!</h1>
+    <div class="content">
+        <p>Unfortunately, we could not find the requested post. It's either not published or no longer available.
+            Please, have a look at other posts.</p>
+        <p>Please...?</p>
+        <figure class="image">
+            <img src="{{ url_for('static', filename='sad_cat.jpeg') }}">
+            <figcaption>This cat is very, very sorry...</figcaption>
+        </figure>
+    </div>
+{% endblock %}
