@@ -23,8 +23,11 @@ def create_tables(engine: Engine) -> bool:
         conn.execute('CREATE TABLE IF NOT EXISTS comments'
                      ' (id INTEGER PRIMARY KEY AUTOINCREMENT,'
                      '  name TEXT,'
+                     '  email TEXT,'
                      '  post_id INTEGER,'
                      '  content TEXT,'
+                     '  publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
+                     '  approved INTEGER DEFAULT 0,'
                      '  FOREIGN KEY (post_id) REFERENCES entries(id)'
                      '  )')
 
@@ -57,3 +60,21 @@ def get_posts(engine: Engine, post_id: int = None) -> list:
                 posts[i]['tags'] = posts[i]['tags'].split(',')
 
         return posts
+
+
+def get_comments(engine: Engine, post_id) -> list:
+    """
+    Get all comments for a specific blog post as a list of table records
+
+    :param engine: SQLAlchemy engine object
+    :param post_id: blog entry 'id' (mandatory)
+    :return:
+    """
+    with engine.connect() as conn:
+        result = conn.execute('SELECT * FROM comments WHERE post_id = ?',
+                              post_id)
+
+        # unpack results into list of JSON records
+        comments = [dict(row) for row in result]
+
+        return comments
