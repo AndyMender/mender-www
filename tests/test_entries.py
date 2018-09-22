@@ -23,7 +23,7 @@ def test_store_entry(create_entry, get_engine):
 
     entry = create_entry(ENTRY_ID, ENTRY_TITLE, ENTRY_FILE, ENTRY_TAGS)
 
-    entry.to_sql(get_engine)
+    assert entry.to_sql(get_engine)
 
 
 def test_store_retrieve_entry(create_entry, get_engine):
@@ -31,7 +31,7 @@ def test_store_retrieve_entry(create_entry, get_engine):
 
     entry_in = create_entry(ENTRY_ID, ENTRY_TITLE, ENTRY_FILE, ENTRY_TAGS)
 
-    entry_in.to_sql(get_engine)
+    assert entry_in.to_sql(get_engine)
 
     # get selected blog entry
     entry_out = EntryFactory.from_sql(get_engine, ENTRY_ID)
