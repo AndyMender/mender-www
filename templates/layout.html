@@ -37,6 +37,7 @@
                             <ul class="menu-list">
                                 <li><a href="/">About Me</a></li>
                             </ul>
+
                         <p class="menu-label">Posts</p>
                             <ul class="menu-list">
                                 {% for post in posts %}
@@ -50,23 +51,46 @@
 
         <!-- FOOTER SECTION -->
         <footer class="footer">
-            <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item">
+            <nav class="level">
+                <div class="level-left">
+                    <div class="level-item">
                         <h1 class="title is-6">Copyright @ Andy Mender 2018</h1>
-                    </a>
+                    </div>
                 </div>
 
-                <div class="navbar-menu is-active">
-                    <div class="navbar-end">
-                        <a class="navbar-item" href="https://github.com/AndyMender/mender-www">
-                            <span class="icon">
+                <div class="level-right">
+                    <div class="level-item">
+                        <div class="tags has-addons">
+                            <span class="tag is-dark">Powered By</span>
+                            <a href="https://bulma.io" class="tag is-primary">Bulma</a>
+                        </div>
+                    </div>
+
+                    <div class="level-item">
+                        <div class="tags has-addons">
+                            <span class="tag is-dark">Powered By</span>
+                            <a href="https://www.debian.org" class="tag is-link">Debian</a>
+                        </div>
+                    </div>
+
+                    <div class="level-item">
+                        <div class="tags has-addons">
+                            <span class="tag is-dark">Powered By</span>
+                            <a href="https://nginx.org" class="tag is-success">Nginx</a>
+                        </div>
+                    </div>
+
+                    <div class="level-item">
+                        <a href="https://github.com/AndyMender/mender-www">
+                            <span class="icon has-text-dark">
                                 <i class="fa fa-github"></i>
                             </span>
                         </a>
-                        <!-- TODO: add mail link -->
-                        <a class="navbar-item">
-                            <span class="icon">
+                    </div>
+
+                    <div class="level-item">
+                        <a href="mailto:andymenderunix@gmail.com">
+                            <span class="icon has-text-dark">
                                 <i class="fa fa-envelope"></i>
                             </span>
                         </a>
