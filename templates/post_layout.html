@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <!-- POST BODY -->
+    {% block post_content %}{% endblock %}
+
+    <!-- TAGS SECTION -->
+    <nav class="level">
+        <div class="level-left">
+            {% for tag in tags %}
+            <div class="level-item">
+                <a class="tag is-info">{{ tag }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </nav>
+
+    <!-- COMMENTS SECTION -->
+    <div class="box">
+        <h1 class="title is-5">Comments</h1>
+        {% for comment in comments %}
+            <article class="message">
+                <div class="message-body">
+                    <div class="content">
+                        <h6><em>{{ comment['name'] }} wrote...</em></h6>
+                        <p>{{ comment['content'] }}</p>
+                        <p class="heading">{{ comment['publish_date'] }}</p>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}

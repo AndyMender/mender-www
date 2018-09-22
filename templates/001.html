@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% block content %}
+{% extends "post_layout.html" %}
+{% block post_content %}
     <h1 class="title is-3">{{ title or "Post Title" }}</h1>
     {% if publish_date %}
         <h2 class="subtitle is-7">Published: {{ publish_date }}</h2>
@@ -8,14 +8,4 @@
     <div class="content">
         <p>Test paragraph</p>
     </div>
-
-    <nav class="level">
-        <div class="level-left">
-            {% for tag in tags %}
-                <div class="level-item">
-                    <a class="tag is-info">{{ tag }}</a>
-                </div>
-            {% endfor %}
-        </div>
-    </nav>
 {% endblock %}
