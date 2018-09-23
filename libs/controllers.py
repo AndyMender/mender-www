@@ -1,4 +1,8 @@
+from werkzeug.datastructures import MultiDict
 from sqlalchemy.engine import Engine
+
+from libs.models.forms import CommentForm
+from libs.models.models import Comment
 
 
 def create_tables(engine: Engine) -> bool:
@@ -6,7 +10,7 @@ def create_tables(engine: Engine) -> bool:
     Create tables for blog entries and user comments
 
     :param engine: SQLAlchemy engine object
-    :return:
+    :return: True on success, False on failure
     """
     with engine.connect() as conn:
         conn.execute('CREATE TABLE IF NOT EXISTS entries'
@@ -40,7 +44,7 @@ def get_posts(engine: Engine, post_id: int = None) -> list:
 
     :param engine: SQLAlchemy engine object
     :param post_id: blog entry 'id' (optional)
-    :return:
+    :return: list of post records
     """
     with engine.connect() as conn:
         if post_id is not None:
@@ -62,19 +66,59 @@ def get_posts(engine: Engine, post_id: int = None) -> list:
         return posts
 
 
-def get_comments(engine: Engine, post_id) -> list:
-    """
-    Get all comments for a specific blog post as a list of table records
+def get_comments(engine: Engine, post_id, comment_id: int = None) -> list:
+    """Get all comments for a specific blog post as a list of table records
 
     :param engine: SQLAlchemy engine object
     :param post_id: blog entry 'id' (mandatory)
-    :return:
+    :param comment_id: comment 'id' (optional)
+    :return: list of comment records
     """
     with engine.connect() as conn:
-        result = conn.execute('SELECT * FROM comments WHERE post_id = ?',
-                              post_id)
+        if comment_id is not None:
+            result = conn.execute('SELECT * FROM comments WHERE post_id = ?'
+                                  ' AND id = ?', (post_id, comment_id))
+        else:
+            result = conn.execute('SELECT * FROM comments WHERE post_id = ?',
+                                  post_id)
 
         # unpack results into list of JSON records
         comments = [dict(row) for row in result]
 
         return comments
+
+
+def store_comment(request: MultiDict, engine: Engine) -> str:
+    """Extract comment information from request object; validate and store
+
+    :param request: Flask request object
+    :param engine: SQLAlchemy engine object
+    """
+
+    # fill in comment form
+    form = CommentForm(request.form)
+
+    # validate response, comment and store comment in database
+    if request.method == 'POST':
+        if form.validate():
+            comment = Comment(request.form.get('post_id'),
+                              request.form.get('name'),
+                              request.form.get('content'),
+                              request.form.get('email'))
+
+            if comment.to_sql(engine):
+                return 'success'
+
+        # indicate source of error on failed validation
+        elif len(request.form.get('content')) > 1000:
+            return 'Comment too long. A maximum of 1000 characters is allowed.'
+        elif len(request.form.get('content')) < 5:
+            return 'Comment too short. At least 5 characters are required.'
+        elif len(request.form.get('name')) > 20:
+            return 'Name too long. A maximum of 20 characters is allowed.'
+        elif len(request.form.get('email')) > 50:
+            return 'Email address too long. A maximum of 50 characters is allowed.'
+        elif len(request.form.get('email')) < 5:
+            return 'Email address too short. At least 5 characters are required.'
+
+    return ''
