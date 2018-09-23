@@ -63,7 +63,7 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
         """Get POSTed comment from form, store in database and refresh page"""
 
         # try to store comment and get response from backend
-        response = store_comment(request, engine)
+        response = store_comment(post_id, request, engine)
 
         # validate response and flash corresponding message
         if response == '':

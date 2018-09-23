@@ -88,9 +88,10 @@ def get_comments(engine: Engine, post_id, comment_id: int = None) -> list:
         return comments
 
 
-def store_comment(request: MultiDict, engine: Engine) -> str:
+def store_comment(post_id: int, request: MultiDict, engine: Engine) -> str:
     """Extract comment information from request object; validate and store
 
+    :param post_id: post 'id' to which the comment refers
     :param request: Flask request object
     :param engine: SQLAlchemy engine object
     """
@@ -101,7 +102,7 @@ def store_comment(request: MultiDict, engine: Engine) -> str:
     # validate response, comment and store comment in database
     if request.method == 'POST':
         if form.validate():
-            comment = Comment(request.form.get('post_id'),
+            comment = Comment(post_id,
                               request.form.get('name'),
                               request.form.get('content'),
                               request.form.get('email'))
