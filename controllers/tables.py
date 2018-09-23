@@ -58,8 +58,8 @@ def create_table_stats(engine: Engine) -> bool:
 
     sql_query = ('CREATE TABLE IF NOT EXISTS stats'
                  ' (id INTEGER PRIMARY KEY AUTOINCREMENT,'
-                 '  tick_date TIMESTAMP DEFAULT date(CURRENT_TIMESTAMP),'
-                 '  page_views INTEGER,'
+                 '  tick_date DATE DEFAULT CURRENT_TIMESTAMP,'
+                 '  page_views INTEGER'
                  '  )')
 
     with engine.connect() as conn:
