@@ -6,3 +6,4 @@ class CommentForm(Form):
     name = StringField('name', [validators.required(), validators.length(max=20)])
     email = StringField('email', [validators.optional(), validators.length(min=5, max=50)])
     content = TextAreaField('content', [validators.required(), validators.length(min=5, max=1000)])
+    occupation = StringField('occupation', [validators.optional(), validators.length(max=100)])

@@ -6,11 +6,13 @@ from sqlalchemy.sql import text
 
 class Comment:
     """Blog entry comment object representation"""
-    def __init__(self, post_id: int, name: str, content: str, email: str = None):
+    def __init__(self, post_id: int, name: str, content: str, email: str = None,
+                 occupation: str = None):
         self.post_id = post_id
         self.name = name
         self.content = content
         self.email = email
+        self.occupation = occupation
 
     def get_logger(self):
         """Create logger object for the class"""
@@ -23,10 +25,11 @@ class Comment:
         :return: True on success, False on failure
         """
         sql_query = text('INSERT OR REPLACE INTO comments'
-                         ' (name, email, post_id, content)'
-                         ' VALUES (:name, :email, :post_id, :content)')
+                         ' (name, occupation, email, post_id, content)'
+                         ' VALUES (:name, :occupation, :email, :post_id, :content)')
 
         data = {'name': self.name,
+                'occupation': self.occupation,
                 'email': self.email,
                 'post_id': self.post_id,
                 'content': self.content}

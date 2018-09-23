@@ -61,10 +61,24 @@
                 </div>
             </nav>
 
+            <nav class="level">
+                <div class="level-left"></div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <label class="label">Occupation</label>
+                    </div>
+                    <div class="level-item">
+                        <div class="control">
+                            <input class="input" type="text" name="occupation">
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
             <div class="block">
                 <div class="control">
                     <label class="label">Content</label>
-                    <textarea class="textarea" name="content" placeholder="Max length 1000 characters..."></textarea>
+                    <textarea class="textarea" name="content" placeholder="Max length 1000 characters..." required="required"></textarea>
                 </div>
             </div>
 
@@ -75,7 +89,7 @@
                             {% if category == 'fail' %}
                                 <div class="notification is-danger">{{ message }}</div>
                             {% elif category == 'success' %}
-                                <div class="notification is-success">Comment posted successful and is awaiting moderation.</div>
+                                <div class="notification is-success">Comment posted successfully and awaits moderation.</div>
                             {% else %}
                                 <div class="notification is-warning">Something went wrong and the comment could not be processed.</div>
                             {% endif %}
@@ -85,7 +99,11 @@
             </div>
 
             <div class="level">
-                <div class="level-left"></div>
+                <div class="level-left">
+                    <div class="level-item">
+                        <p><strong>* - required fields</strong></p>
+                    </div>
+                </div>
                 <div class="level-right">
                     <div class="level-item">
                         <input class="button is-dark" type="submit" value="Submit">

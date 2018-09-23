@@ -5,8 +5,8 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask
 from sqlalchemy import create_engine
 
-from libs.controllers import create_tables
-from libs.views import build_endpoints
+from controllers.sql import create_tables
+from views.routes import build_endpoints
 
 # load ENV from .env file
 load_dotenv(find_dotenv())

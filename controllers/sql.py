@@ -1,8 +1,8 @@
 from werkzeug.datastructures import MultiDict
 from sqlalchemy.engine import Engine
 
-from libs.models.forms import CommentForm
-from libs.models.models import Comment
+from models.forms import CommentForm
+from models.models import Comment
 
 
 def create_tables(engine: Engine) -> bool:
@@ -27,6 +27,7 @@ def create_tables(engine: Engine) -> bool:
         conn.execute('CREATE TABLE IF NOT EXISTS comments'
                      ' (id INTEGER PRIMARY KEY AUTOINCREMENT,'
                      '  name TEXT,'
+                     '  occupation TEXT,'
                      '  email TEXT,'
                      '  post_id INTEGER,'
                      '  content TEXT,'
@@ -105,7 +106,8 @@ def store_comment(post_id: int, request: MultiDict, engine: Engine) -> str:
             comment = Comment(post_id,
                               request.form.get('name'),
                               request.form.get('content'),
-                              request.form.get('email'))
+                              request.form.get('email'),
+                              request.form.get('occupation'))
 
             if comment.to_sql(engine):
                 return 'success'
@@ -121,5 +123,7 @@ def store_comment(post_id: int, request: MultiDict, engine: Engine) -> str:
             return 'Email address too long. A maximum of 50 characters is allowed.'
         elif len(request.form.get('email')) < 5:
             return 'Email address too short. At least 5 characters are required.'
+        elif len(request.form.get('occupation')) > 100:
+            return 'Occupation name too long. A maximum of 100 characters is allowed.'
 
     return ''
