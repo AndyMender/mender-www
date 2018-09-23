@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.engine import Engine
 
 
@@ -15,3 +17,13 @@ def database_setup(engine: Engine) -> bool:
         conn.execute(sql_query)
 
     return True
+
+
+def date_now() -> str:
+    """Return current UTC date as string in ISO 8601 format"""
+    return datetime.utcnow().strftime('%Y-%m%-%d')
+
+
+def time_now() -> str:
+    """Return current UTC timestamp as string in ISO 8601 format"""
+    return datetime.utcnow().isoformat(sep=' ', timespec='seconds')
