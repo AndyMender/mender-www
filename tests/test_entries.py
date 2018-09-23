@@ -1,5 +1,5 @@
-from libs.bloglib import EntryFactory
-from libs.sqllib import get_posts
+from libs.models.factories import EntryFactory
+from libs.controllers import get_posts
 
 ENTRY_ID = 1
 ENTRY_TITLE = 'Test blog entry'
