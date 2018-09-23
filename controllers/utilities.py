@@ -21,7 +21,7 @@ def database_setup(engine: Engine) -> bool:
 
 def date_now() -> str:
     """Return current UTC date as string in ISO 8601 format"""
-    return datetime.utcnow().strftime('%Y-%m%-%d')
+    return datetime.utcnow().strftime('%Y-%m-%d')
 
 
 def time_now() -> str:
