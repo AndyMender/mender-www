@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy.engine import Engine
 
-from controllers.sql import get_comments, get_posts
+from controllers.queries import get_comments, get_posts
 from models.models import Comment, Entry
 
 

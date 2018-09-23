@@ -3,7 +3,8 @@ import uuid
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from sqlalchemy.engine import Engine
 
-from controllers.sql import get_comments, get_posts, store_comment
+from controllers.queries import get_comments, get_posts
+from controllers.store import store_comment
 
 
 def build_endpoints(app: Flask, engine: Engine) -> None:

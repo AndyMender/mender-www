@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 
 from models.models import Entry
-from controllers.sql import create_tables
+from controllers.tables import create_tables
 
 
 @pytest.fixture
