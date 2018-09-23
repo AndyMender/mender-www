@@ -3,8 +3,8 @@ import uuid
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from sqlalchemy.engine import Engine
 
-from controllers.queries import get_comments, get_posts
-from controllers.store import store_comment
+from controllers.queries import get_comments, get_page_views, get_posts
+from controllers.store import store_comment, update_page_views
 
 
 def build_endpoints(app: Flask, engine: Engine) -> None:
@@ -21,11 +21,18 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
         # set up session
         session['identity'] = str(uuid.uuid4())
 
+        # update page_views count
+        update_page_views(engine)
+
+        # get total page views
+        page_views = get_page_views(engine, mode='all')
+
         # get 'published' posts from database
         posts = [post for post in get_posts(engine) if post['published']]
 
-        # create website context
-        context = {'posts': posts}
+        # create Web context
+        context = {'posts': posts,
+                   'page_views': page_views}
 
         # generate endpoint
         return render_template('index.html', **context)
@@ -35,16 +42,23 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
     def posts(post_id):
         """Individual blog post endpoints"""
 
-        # get all posts from database
+        # update page_views count
+        update_page_views(engine)
+
+        # get total page views
+        page_views = get_page_views(engine, mode='all')
+
+        # get 'published' posts from database
         posts = [post for post in get_posts(engine) if post['published']]
 
         # get all comments for selected post from database
         comments = [comment for comment in get_comments(engine, post_id)
                     if comment['approved']]
 
-        # build Web page context
+        # create Web page context
         context = {'posts': posts,
                    'comments': comments,
+                   'page_views': page_views,
                    'post_id': post_id}
 
         # extract information on selected post
@@ -62,6 +76,9 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
     @app.route('/<post_id>/submit_comment', methods=['POST'])
     def submit_comment(post_id):
         """Get POSTed comment from form, store in database and refresh page"""
+
+        # update page_views count
+        update_page_views(engine)
 
         # try to store comment and get response from backend
         response = store_comment(post_id, request, engine)

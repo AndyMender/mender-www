@@ -1,4 +1,8 @@
+from typing import Union
+
 from sqlalchemy.engine import Engine
+
+from controllers.utilities import date_now
 
 
 def get_posts(engine: Engine, post_id: int = None) -> list:
@@ -51,3 +55,31 @@ def get_comments(engine: Engine, post_id, comment_id: int = None) -> list:
         comments = [dict(row) for row in result]
 
         return comments
+
+
+def get_page_views(engine: Engine, mode: str = 'current') -> Union[int, None]:
+    """Get page views for current date or all
+
+    :param engine: SQLAlchemy engine object
+    :param mode: page view aggregation method ('current', 'all')
+    """
+
+    # SQL query return placeholder
+    result = []
+
+    # get page views from database
+    with engine.connect() as conn:
+        if mode == 'all':
+            result = conn.execute('SELECT total(page_views) FROM stats')
+        elif mode == 'current':
+            result = conn.execute('SELECT page_views FROM stats'
+                                  ' WHERE tick_date = ?', date_now())
+
+        # unpack results into list of JSON records
+        result = [dict(row) for row in result]
+
+        # check results and return sanitized value
+        if len(result) > 0:
+            return int(list(result[0].values())[0])
+        else:
+            return None

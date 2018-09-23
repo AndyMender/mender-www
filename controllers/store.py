@@ -1,6 +1,9 @@
 from werkzeug.datastructures import MultiDict
 from sqlalchemy.engine import Engine
+from sqlalchemy.sql import text
 
+from controllers.queries import get_page_views
+from controllers.utilities import date_now
 from models.forms import CommentForm
 from models.models import Comment
 
@@ -43,3 +46,36 @@ def store_comment(post_id: int, request: MultiDict, engine: Engine) -> str:
             return 'Occupation name too long. A maximum of 100 characters is allowed.'
 
     return ''
+
+
+def update_page_views(engine: Engine) -> None:
+    """Increment page views
+
+    :param engine: SQLAlchemy engine object
+    :return:
+    """
+    # get current page_views value if it exists
+    page_views = get_page_views(engine, mode='current')
+
+    # update page views
+    with engine.connect() as conn:
+
+        # no page_views for current date? new entry
+        if page_views is None:
+            sql_query = text('INSERT INTO stats (tick_date, page_views)'
+                             ' VALUES (:tick_date, :page_views)')
+
+            data = {'tick_date': date_now(),
+                    'page_views': 1}
+
+            conn.execute(sql_query, **data)
+
+        # increment page_views count
+        else:
+            sql_query = text('UPDATE stats SET page_views = :page_views'
+                             ' WHERE tick_date = :tick_date')
+
+            data = {'tick_date': date_now(),
+                    'page_views': page_views + 1}
+
+            conn.execute(sql_query, **data)
