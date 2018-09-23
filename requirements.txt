@@ -6,3 +6,5 @@ pycodestyle
 pytest
 python-dotenv
 sqlalchemy
+werkzeug
+WTForms
