@@ -1,12 +1,14 @@
 import os
+import uuid
 
 from dotenv import find_dotenv, load_dotenv
-from flask import Flask, render_template
+from flask import Flask
 from sqlalchemy import create_engine
 
-from libs.sqllib import create_tables, get_posts
+from libs.controllers import create_tables
+from libs.views import build_endpoints
 
-# load .env file
+# load ENV from .env file
 load_dotenv(find_dotenv())
 
 # set up Flask application
@@ -14,50 +16,21 @@ app = Flask(__name__,
             static_folder='public',
             template_folder='templates')
 
-SQL_DB = os.environ.get('SQL_DB')
+# configure application
+app.config.from_object(__name__)
+app.config['SECRET_KEY'] = str(uuid.uuid4())
 
-
-@app.route('/')
-def index():
-    """Blog front page"""
-
-    # get 'published' posts from database
-    posts = [post for post in get_posts(engine) if post['published']]
-
-    # create website context
-    context = {'posts': posts}
-
-    # generate endpoint
-    return render_template('index.html', **context)
-
-
-@app.route('/<post_id>')
-def posts(post_id):
-    """Individual blog post endpoints"""
-
-    # get post from database
-    posts = [post for post in get_posts(engine) if post['published']]
-
-    context = {'posts': posts}
-
-    # extract information on selected post
-    for post in posts:
-        if int(post_id) == post['id']:
-
-            # include 'post' attributes in Web page 'context'
-            context.update(post)
-
-            return render_template(post['filename'], **context)
-
-    return render_template('not_found.html', **context)
-
+DB = os.environ.get('SQL_DB')
 
 if __name__ == '__main__':
     # create database connector
-    engine = create_engine(f'sqlite:///{SQL_DB}')
+    engine = create_engine(f'sqlite:///{DB}')
 
     # generate tables (if missing)
     create_tables(engine)
+
+    # set up application endpoints and URL paths
+    build_endpoints(app, engine)
 
     # start Web application
     app.run(os.environ.get('FLASK_HOST'),
