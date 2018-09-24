@@ -1,6 +1,6 @@
 import uuid
 
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, abort, flash, redirect, render_template, request, session, url_for
 from sqlalchemy.engine import Engine
 
 from controllers.queries import get_comments, get_page_views, get_posts
@@ -70,7 +70,7 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
 
                 return render_template(post['filename'], **context)
 
-        return render_template('not_found.html', **context)
+        abort(404)
 
 
     @app.route('/posts/<post_id>/submit_comment', methods=['POST'])
@@ -92,3 +92,19 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
             flash(response, category='fail')
 
         return redirect(url_for('posts', post_id=post_id))
+
+    @app.errorhandler(404)
+    def not_found(error):
+        """Page not found handler"""
+
+        # get total page views
+        page_views = get_page_views(engine, mode='all')
+
+        # get 'published' posts from database
+        posts = [post for post in get_posts(engine) if post['published']]
+
+        # create Web page context
+        context = {'posts': posts,
+                   'page_views': page_views}
+
+        return render_template('not_found.html', **context), 404
