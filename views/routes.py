@@ -38,7 +38,7 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
         return render_template('index.html', **context)
 
 
-    @app.route('/<post_id>', methods=['GET'])
+    @app.route('/posts/<post_id>', methods=['GET'])
     def posts(post_id):
         """Individual blog post endpoints"""
 
@@ -73,7 +73,7 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
         return render_template('not_found.html', **context)
 
 
-    @app.route('/<post_id>/submit_comment', methods=['POST'])
+    @app.route('/posts/<post_id>/submit_comment', methods=['POST'])
     def submit_comment(post_id):
         """Get POSTed comment from form, store in database and refresh page"""
 
