@@ -2,6 +2,7 @@ flask
 html5lib
 isort
 lxml
+Frozen-Flask
 pycodestyle
 pytest
 python-dotenv
