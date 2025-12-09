@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 
 services:
   # application Flask server
@@ -8,6 +8,7 @@ services:
 
     build:
       context: .
+      dockerfile: Dockerfile
 
     logging:
       driver: "json-file"
@@ -15,13 +16,13 @@ services:
         max-size: "100k"
         max-file: "10"
 
-
   # reverse-proxy NGINX server
   web:
-    image: "nginx"
+    image: "nginx:1.29"
     container_name: mender_nginx
     restart: on-failure
     
+    # NOTE: Places both containers in the same network
     links:
       - app
       
@@ -39,5 +40,8 @@ services:
       - "443:443"
 
     volumes:
+      # Keep logs outside of Docker
+      - ./logs/nginx:/var/log/nginx
       - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      # TODO: A full list of mimetypes is needed?
       - ./conf/mime.types:/etc/nginx/conf.d/mime.types:ro
