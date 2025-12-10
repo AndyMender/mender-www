@@ -13,6 +13,10 @@ services:
       options:
         max-size: "100k"
         max-file: "10"
+    
+    # NOTE: The port mapping is needed only when the app is directly exposed outside the docker 'default' network.
+    # ports:
+    #   - "8000:8000"
 
   # reverse-proxy NGINX server
   web:
@@ -41,5 +45,3 @@ services:
       # Keep logs outside of Docker
       - ./logs/nginx:/var/log/nginx
       - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      # TODO: A full list of mimetypes is needed?
-      - ./conf/mime.types:/etc/nginx/conf.d/mime.types:ro
