@@ -37,6 +37,8 @@ if __name__ == '__main__':
     build_endpoints(app, engine)
 
     # start Web application
-    app.run(os.environ.get('FLASK_HOST'),
-            os.environ.get('FLASK_PORT'),
-            debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=8000,
+        debug=True,
+    )
