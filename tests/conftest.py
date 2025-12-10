@@ -10,15 +10,12 @@ def get_engine():
     """Provide a temporary SQLAlchemy engine connection
     to an in-memory database for tests"""
 
-    engine = create_engine(f'sqlite://')
+    engine = create_engine("sqlite://", echo=True, isolation_level="AUTOCOMMIT")
 
     create_tables(engine)
 
-    conn = engine.connect()
+    yield engine
 
-    yield conn
-
-    conn.close()
     engine.dispose()
 
 

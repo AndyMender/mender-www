@@ -4,6 +4,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.sql import text
 
 
+# TODO: Add Post model?
 class Comment:
     """Blog entry comment object representation"""
     def __init__(self, post_id: int, name: str, content: str, email: str = None,
@@ -35,7 +36,7 @@ class Comment:
                 'content': self.content}
 
         with engine.connect() as conn:
-            conn.execute(sql_query, **data)
+            conn.execute(sql_query, data)
 
         return True
 
@@ -43,7 +44,7 @@ class Comment:
 class Entry:
     """Blog entry object representation"""
     def __init__(self, post_id: int, title: str, filename: str, tags: list = None):
-        self.post_id = post_id
+        self.id = post_id
         self.title = title
         self.filename = filename
         self.tags = tags if tags is not None else []
@@ -63,12 +64,12 @@ class Entry:
                          ' (id, title, filename, tags)'
                          ' VALUES (:id, :title, :filename, :tags)')
 
-        data = {'id': self.post_id,
+        data = {'id': self.id,
                 'title': self.title,
                 'filename': self.filename,
                 'tags': ','.join(self.tags)}
 
         with engine.connect() as conn:
-            conn.execute(sql_query, **data)
+            conn.execute(sql_query, data)
 
         return True

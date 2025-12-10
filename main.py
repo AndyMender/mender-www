@@ -25,7 +25,7 @@ DB = os.environ.get('SQL_DB')
 
 if __name__ == '__main__':
     # create database connector
-    engine = create_engine(f'sqlite:///{DB}')
+    engine = create_engine(f'sqlite:///{DB}', isolation_level="AUTOCOMMIT")
 
     # set up database for Web app use
     database_setup(engine)
