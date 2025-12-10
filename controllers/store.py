@@ -68,7 +68,7 @@ def update_page_views(engine: Engine) -> None:
             data = {'tick_date': date_now(),
                     'page_views': 1}
 
-            conn.execute(sql_query, **data)
+            conn.execute(sql_query, data)
 
         # increment page_views count
         else:
@@ -78,4 +78,4 @@ def update_page_views(engine: Engine) -> None:
             data = {'tick_date': date_now(),
                     'page_views': page_views + 1}
 
-            conn.execute(sql_query, **data)
+            conn.execute(sql_query, data)

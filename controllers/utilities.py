@@ -4,6 +4,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.sql import text
 
 
+# TODO: Functions like this don't need to return anything
 def database_setup(engine: Engine) -> bool:
     """Optimize SQLite database for use as a Web backend
 
