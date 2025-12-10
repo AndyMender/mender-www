@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy.engine import Engine
+from sqlalchemy.sql import text
 
 
 def database_setup(engine: Engine) -> bool:
@@ -11,7 +12,7 @@ def database_setup(engine: Engine) -> bool:
     """
 
     # init SQL query
-    sql_query = 'PRAGMA journal_mode=WAL;'
+    sql_query = text("PRAGMA journal_mode=WAL;")
 
     with engine.connect() as conn:
         conn.execute(sql_query)
