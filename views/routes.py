@@ -7,11 +7,12 @@ from controllers.queries import get_comments, get_page_views, get_posts
 from controllers.store import store_comment, update_page_views
 
 
-def build_endpoints(app: Flask, engine: Engine) -> None:
+def build_endpoints(app: Flask, engine: Engine) -> Flask:
     """Create application endpoints and routes
 
     :param app: Flask server/app
     :param engine: SQLAlchemy engine for communicating with the backend
+    :return: Fully bootstrapped Flask app
     """
 
     @app.route('/', methods=['GET'])
@@ -108,3 +109,5 @@ def build_endpoints(app: Flask, engine: Engine) -> None:
                    'page_views': page_views}
 
         return render_template('not_found.html', **context), 404
+    
+    return app
