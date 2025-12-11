@@ -11,8 +11,12 @@ metadata:
     app: mender-www
   name: mender-www
 spec:
+  # NOTE: Can be used to temporarily stop the Deployment from running if it's breaking something
+  paused: false
   # TODO: This requires an external database as storage backend!
   replicas: 3
+  # NOTE: Max number of preserved older ReplicaSets which can be used for immediate rollbacks (default: 10)
+  revisionHistoryLimit: 10
   # NOTE: Optional deployment strategy parameters to control the pace of update rollouts
   strategy:
    type: RollingUpdate
