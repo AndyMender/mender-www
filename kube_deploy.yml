@@ -72,6 +72,9 @@ metadata:
 spec:
   selector:
     app: mender-www
+  type: clusterIP
+  # TODO: In a real deployment an actual IP address needs to be set
+  clusterIP: "192.168.0.15"
   ports:
     - name: http
       protocol: TCP
