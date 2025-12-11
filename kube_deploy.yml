@@ -23,12 +23,14 @@ spec:
           imagePullPolicy: IfNotPresent
           restartPolicy: Always
           ports:
-            - name: mender-nginx-port
+            - name: mender-nginx-http
               containerPort: 80
+            - name: mender-nginx-https
+              containerPort: 443
           livenessProbe:
             httpGet:
               path: /
-              port: mender-nginx-port
+              port: mender-nginx-http
             initialDelaySeconds: 5
             periodSeconds: 15
           # NOTE: 'command' block not needed - baked into the Docker container!
@@ -71,5 +73,9 @@ spec:
   selector:
     app: mender-www
   ports:
-    - protocol: TCP
-      port: mender-nginx-port
+    - name: http
+      protocol: TCP
+      port: mender-nginx-http
+    - name: https
+      protocol: TCP
+      port: mender-nginx-https
