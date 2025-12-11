@@ -1,0 +1,62 @@
+# TODO: WARNING - BELOW IS A WIP!
+
+# TODO: To create the ConfigMap object for NGINX from an existing config file run:
+# kubectl create configmap nginx-conf --from-file=nginx.conf=conf/nginx.conf
+---
+# Main nginx + Flask deployment
+apiVersion: v1
+kind: Deployment
+metadata:
+  labels:
+    app: mender-www
+  name: mender-www
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mender-www
+  template:
+    spec:
+      initContainers:
+        - name: mender-nginx
+          image: nginx:1.29
+          imagePullPolicy: IfNotPresent
+          restartPolicy: Always
+          ports:
+            - containerPort: 80
+          # NOTE: 'script' block not needed - baked into the Docker container!
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      containers:
+        - name: mender-www
+          # TODO: Point to Docker registry where the container is located (for instance, Github Packages)
+          image: registry-address/mender-www:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          # NOTE: 'script' block not needed - baked into the Docker container!
+      volumes:
+        - name: nginx-conf
+          # NOTE: References a ConfigMap object
+          configMap:
+            name: nginx-conf
+            defaultMode: 420
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+ 
+---
+# Service object to expose entire setup outside Kubernetes
+apiVersion: v1
+kind: Service
+metadata:
+  name: mender-www-svc
+spec:
+  selector:
+    app: mender-www
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
