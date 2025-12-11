@@ -11,6 +11,7 @@ metadata:
     app: mender-www
   name: mender-www
 spec:
+  # TODO: This requires an external database as storage backend!
   replicas: 3
   # NOTE: Optional deployment strategy parameters to control the pace of update rollouts
   strategy:
