@@ -11,7 +11,13 @@ metadata:
     app: mender-www
   name: mender-www
 spec:
-  replicas: 1
+  replicas: 3
+  # NOTE: Optional deployment strategy parameters to control the pace of update rollouts
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 1
+     maxSurge: 1
   # NOTE: An optional selector for the auto-generated ReplicaSet
   selector:
     matchLabels:
