@@ -54,6 +54,8 @@ spec:
             - name: nginx-conf
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+            - name: nginx-logs
+              mountPath: /var/log/nginx
       containers:
         - name: mender-www
           # TODO: Point to Docker registry where the container is located (for instance, Github Packages)
@@ -78,6 +80,9 @@ spec:
             items:
               - key: nginx.conf
                 path: nginx.conf
+        # TODO: In a production setup this would point to a PersistentVolume object
+        - name: nginx-logs
+          emptyDir: {}
  
 ---
 # Service object to expose entire setup outside Kubernetes
