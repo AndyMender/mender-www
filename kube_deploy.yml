@@ -84,7 +84,9 @@ spec:
         - name: nginx-logs
           emptyDir:
             sizeLimit: 500Mi
- 
+        - name: mender-www-storage
+          persistentVolumeClaim:
+          claimName: mender-www-pvc
 ---
 # Service object to expose entire setup outside Kubernetes
 apiVersion: v1
@@ -106,3 +108,18 @@ spec:
     - name: https
       protocol: TCP
       port: mender-nginx-https
+---
+# An optional PersistentVolume if running in Google Cloud
+# NOTE: The backend storage is auto-provisioned as a Compute Engine disk
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mender-pvc
+spec:
+  accessModes:
+    # NOTE: read/write from a single Pod
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: standard-rwo
