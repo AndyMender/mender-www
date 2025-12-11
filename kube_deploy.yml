@@ -72,5 +72,4 @@ spec:
     app: mender-www
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: mender-nginx-port
+      port: mender-nginx-port
