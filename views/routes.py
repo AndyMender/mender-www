@@ -1,6 +1,6 @@
 import uuid
 
-from flask import Flask, abort, flash, redirect, render_template, request, session, url_for
+from flask import Flask, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from sqlalchemy.engine import Engine
 
 from controllers.queries import get_comments, get_page_views, get_posts
@@ -93,6 +93,11 @@ def build_endpoints(app: Flask, engine: Engine) -> Flask:
             flash(response, category='fail')
 
         return redirect(url_for('posts', post_id=post_id))
+
+    @app.route("/health", methods=["GET"])
+    def health_check():
+        """Simple health check endpoint."""
+        return jsonify({'status': 'healthy'}), 200
 
     @app.errorhandler(404)
     def not_found(error):

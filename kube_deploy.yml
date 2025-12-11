@@ -23,8 +23,15 @@ spec:
           imagePullPolicy: IfNotPresent
           restartPolicy: Always
           ports:
-            - containerPort: 80
-          # NOTE: 'script' block not needed - baked into the Docker container!
+            - name: mender-nginx-port
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: mender-nginx-port
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          # NOTE: 'command' block not needed - baked into the Docker container!
           volumeMounts:
             - name: nginx-conf
               mountPath: /etc/nginx/nginx.conf
@@ -35,8 +42,15 @@ spec:
           image: registry-address/mender-www:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8000
-          # NOTE: 'script' block not needed - baked into the Docker container!
+            - name: mender-www-port
+              containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: mender-www-port
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          # NOTE: 'command' block not needed - baked into the Docker container!
       volumes:
         - name: nginx-conf
           # NOTE: References a ConfigMap object
@@ -59,4 +73,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: mender-nginx-port
