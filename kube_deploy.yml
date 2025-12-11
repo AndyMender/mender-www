@@ -82,7 +82,8 @@ spec:
                 path: nginx.conf
         # TODO: In a production setup this would point to a PersistentVolume object
         - name: nginx-logs
-          emptyDir: {}
+          emptyDir:
+            sizeLimit: 500Mi
  
 ---
 # Service object to expose entire setup outside Kubernetes
