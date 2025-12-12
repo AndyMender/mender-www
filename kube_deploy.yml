@@ -64,13 +64,16 @@ spec:
           ports:
             - name: mender-www-port
               containerPort: 8000
+          # NOTE: 'command' block not needed - baked into the Docker container!
           livenessProbe:
             httpGet:
               path: /health
               port: mender-www-port
             initialDelaySeconds: 5
             periodSeconds: 15
-          # NOTE: 'command' block not needed - baked into the Docker container!
+          volumeMounts:
+            - name: mender-www-storage
+              mountPath: /app
       volumes:
         - name: nginx-conf
           # NOTE: References a ConfigMap object
@@ -86,7 +89,7 @@ spec:
             sizeLimit: 500Mi
         - name: mender-www-storage
           persistentVolumeClaim:
-          claimName: mender-www-pvc
+            claimName: mender-www-pvc
 ---
 # Service object to expose entire setup outside Kubernetes
 apiVersion: v1
