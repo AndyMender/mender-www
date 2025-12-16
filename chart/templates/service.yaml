@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.ports.svc.portHttp }}
+      targetPort: {{ .Values.service.ports.app.portHttp }}
+      protocol: TCP
+      name: {{ .Values.service.ports.svc.name }}
+  selector:
+    {{ toYaml .Values.labels | nindent 4 }}

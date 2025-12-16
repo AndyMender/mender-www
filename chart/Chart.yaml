@@ -1,0 +1,15 @@
+# NOTE: Main chart definition with basic metadata (name, version, etc.)
+apiVersion: v2
+name: mender-www
+description: Helm chart for the mender-www blog deployment
+
+# NOTE: There are 2 types of charts:
+# application - full deliverable application deployment
+# library - contains utilities and functions, added to 'application' charts as dependency
+type: application
+
+# Semantic version of the chart manifest
+version: 0.0.1
+
+# Version of the deployed application - doesn't have to follow semantic versioning
+appVersion: "0.0.1"

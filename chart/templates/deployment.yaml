@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.name | quote }} 
+  namespace: {{ .Values.namespace | quote }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  # TODO: Does the conditional '-' skip if .autoscaling already is missing?
+  {{- if not .Values.autoscaling.enabled }}
+  # NOTE: Value passed directly since it's an integer.
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  {{- with .Values.selectorLabels }}
+  selector:
+    matchLabels:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        # NOTE: Even YAML blocks from the template need to be converted to YAML again
+        # NOTE2: 'nindent' or 'indent' have to be used to match the correct indentation level
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- toYaml .Values.labels | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8}}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: {{ .Values.service.ports.app.name }}
+              containerPort: {{ .Values.service.ports.app.portHttp }}
+              protocol: TCP
+          {{- with .Values.startupProbe }}         
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end}}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

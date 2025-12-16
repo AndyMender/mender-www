@@ -1,0 +1,109 @@
+# NOTE: Default values and fields for use in downstream Kubernetes manifests via the Golang templating language + Helm functions
+# NOTE2: Field names can be anything, though it's easier to template if they directly match names in target manifests
+
+# NOTE: Extra on top of the serviceAccount to isolate app resource in the cluster
+namespace: mender-www
+
+# Group of extra identifiers for deployment components
+labels:
+  app: mender-www
+selectorLabels: {}
+podLabels: {}
+
+# Number of replicas in the deployment's auto-generated ReplicaSet: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicas: 1
+
+# Parameters if autoscaling is enabled. Details: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+  # TODO: Switch to memory-based scaling if needed - probably not applicable to nginx and static Flask apps
+  # targetMemoryUtilizationPercentage: 80
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+# Definitions for the main App container
+image:
+  # NOTE: 'registry' kept separate in case it needs to be updated
+  registry: "ghcr.io/andymender"
+  repository: "mender-python"
+  pullPolicy: IfNotPresent
+  # Set to appVersion in deployment, but can be overwritten here
+  tag: ""
+
+  # NOTE: Possibly needed when pulling from a private repository. Details: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  imagePullSecrets: []
+
+# Service flanking the App deployment. Details: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # The service will be available outside the cluster. Details: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # Settings for individual ports for the app and exposed from the service. Details: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  ports:
+    app:
+      name: mender-app-port
+      portHttp: 8000
+    svc:
+      name: mender-svc-port
+      portHttp: 80
+
+# Main Ingress setup. Details: https://kubernetes.io/docs/concepts/services-networking/ingress/
+# TODO: Decide if to use a proper nginx-ingress setup or a simple Ingress manifest.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# TODO: Adjust as needed!
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Startup, Liveness and Readiness probes. Details: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+startupProbe:
+  httpGet:
+    path: /health
+    port: mender-app-port
+    failureThreshold: 5
+    periodSeconds: 5
+livenessProbe:
+  httpGet:
+    path: /health
+    port: mender-app-port
+    initialDelaySeconds: 5
+    periodSeconds: 15
+readinessProbe:
+  httpGet:
+    path: /health
+    port: mender-app-port
+    initialDelaySeconds: 5
+    periodSeconds: 15
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
