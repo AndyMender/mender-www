@@ -1,0 +1,7 @@
+# Local log results
+logs/**
+
+# Python intermediate files
+**/**/__pycache__
+.pytest_cache/**
+venv/**
