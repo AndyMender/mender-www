@@ -1,7 +1,8 @@
+{{- $fullName := .Chart.Name | quote }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name | quote }} 
+  name: {{ $fullName }} 
   namespace: {{ .Values.namespace | quote }}
   labels:
     {{- toYaml .Values.labels | nindent 4 }}
@@ -35,7 +36,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $fullName }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
